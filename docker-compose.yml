@@ -1,0 +1,48 @@
+services:
+  nginx:
+    image: nginx:latest
+    restart: always
+    networks:
+      - default
+    
+  nc:
+    image: busybox:latest
+    restart: always
+    networks:
+      - default
+    command:
+      - nc
+      - -lk
+      - -p
+      - "8080"
+      - -e
+      - echo
+      - 'Hello, World!'
+
+  proxy:
+    image: nomeaning777/simple-network-proxy:latest
+    build: .
+    cap_add:
+      - NET_ADMIN
+    command:
+      - -p
+      - 1080:nginx:80
+      - -p
+      - 13117:nc:8080
+    volumes:
+      - ./proxy.py:/usr/local/bin/proxy
+    restart: always
+    ports:
+      - 1080:1080
+      - 13117:13117
+    networks:
+      expose:
+        interface_name: eth-public
+      default:
+        interface_name: eth-internal
+    
+
+networks:
+  default:
+    internal: true
+  expose:
