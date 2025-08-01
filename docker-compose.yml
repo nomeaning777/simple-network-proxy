@@ -20,7 +20,7 @@ services:
       - 'Hello, World!'
 
   proxy:
-    image: ghcr.io/nomeaning777/simple-network-proxy:latest
+    image: ghcr.io/ctfplatform/simple-network-proxy:latest
     build: .
     cap_add:
       - NET_ADMIN
